@@ -1,0 +1,3 @@
+type ('nonterminal0, 'terminal1) symbol2 =
+  | N3 of 'nonterminal0
+  | T4 of 'terminal1;;

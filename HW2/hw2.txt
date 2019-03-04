@@ -1,0 +1,22 @@
+High-level overview of implementation
+
+1) The convert_grammar function uses the first element of gram1 as the start symbol and finds any right hand side rule corresponding to this start symbol in the old grammar. We can continuously use this function with different start symbols (all non-terminal symbols possible) to identify each rule and produce a whole grammar in the specified format.
+
+2) A naive acceptor such as accept_all will not work for complex grammars. For an alternative in the form of [X;Y;Z], the acceptor might provide an acceptable derivation for X and Y, but might not be able to do the same for the remaining element Z. Therefore, the acceptor needs to be able to find derivations for all non-terminals, and reject any alternatives where any non-terminal is left underived. With this in mind, the acceptor was programmed to parse through the rules and look for derivations of each non-terminal symbol in an alternative before accepting.
+
+3) At a high level, the parse_prefix function works in almost a brute-force, recursive manner. The function looks for a derivation and backtracks to an alternative whenever a derivation is not found. The function compares every element in the provided fragment to the right hand side of the grammar rules until a correct derivation is formed.
+
+Other approaches considered
+
+- Instead of a linear scan through the sentence (left to right), we could've tried other traversals. However, a linear scan is most convenient and compatible in terms of OCaml code
+- In the program, the acceptor carries out the bulk of the processing. Initially, most of the recursive/backtracking work was being done outside the acceptor, however, that seemed to be a blind alley.
+
+Weakness in submitted solution
+
+The parse_prefix function is unable to deal with blind alley rules. The drawback of using a recursive method in the acceptor is that the program can go into an infinite loop.
+For example, consider the following grammar rules:
+
+Expression -> Expression Operator            Expression -> "1"
+Operator ->
+
+By using a recursive method and traversing through the rules (from left to right), the program will keep trying to go further into the Expression rule without ever terminating. (It could terminate if it used "1" instead of Expression Operator). Therefore, this program cannot deal with these blind alley rules and infinite recursion problems.

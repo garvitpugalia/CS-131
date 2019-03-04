@@ -1,0 +1,1 @@
+export PATH="~/Downloads/jdk-9.0.4/bin:$PATH"
